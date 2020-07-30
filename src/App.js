@@ -7,6 +7,40 @@ import "./App.scss";
 
 const App = () => {
 
+  // Define ref for element
+  const sectionRef = useRef(null);
+
+  // Use useIntersection hook and pass in sectionRef and some options
+  const intersection = useIntersection(sectionRef, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.5
+  });
+
+  const fadeIn = element => {
+    gsap.to(element, 1, {
+      opacity: 1,
+      y: -60,
+      ease: "power4.out",
+      stagger: {
+        amount: 0.3
+      }
+    })
+  };
+
+  const fadeOut = element => {
+    gsap.to(element, 1, {
+      opacity: 0,
+      y: -20,
+      ease: "power4.out"
+    })
+  };
+
+  // check when threshold reached
+  intersection && intersection.intersectionRatio < 0.5
+    ? fadeOut(".fadeIn") // Not reached
+    : fadeIn(".fadeIn") // Reached so animate
+
   return (
     <React.Fragment>
       <div className='header'>
@@ -36,7 +70,7 @@ const App = () => {
           pretium.
         </p>
       </div>
-      <div className='sectionSecond'>
+      <div ref={sectionRef} className='sectionSecond'>
         <div className='inner'>
           <h3 className='fadeIn'>The talk of what makes a champion.</h3>
           <p className='fadeIn'>
